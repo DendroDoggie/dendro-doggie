@@ -184,13 +184,49 @@ carry out calculations, we ask that a new, indented line which starts at the
 operator.
 
 ```c
-double res = (4 - res_of_prev_calculation + another_prev_calculation_res)
+double res = (4 - long_calculation + another_long_calculation)
     / (some_other_calculation * 100);
 ```
 
 ### Blank lines
 
-### Including
+Blanks lines are useful for conveying the relationship between lines of code.
+The programmer should use their best discretion to separate two or more lines
+of code; however, it is recommended to keep highly related lines together, and
+to separate another highly related group of lines from another by a single
+blank line.
+
+```c
+double curve_area(a1, b1, a2, b2, dx)
+{
+    // each line works to get the area of the first trapezoid
+    double a1_y = f(a1);
+    double b1_y = f(b1);
+    double area1 = trapezoid_area(a1_y, b1_y, dx);
+
+    // a blank line helps reinforce the following block is for the second
+    // trapezoid's area
+    double a2_y = f(a2);
+    double b2_y = f(b2);
+    double area2 += trapezoid_area(a2_y, b2_y, dx);
+
+    // returns should always be separated by one blank line
+    return area1 + area2;
+}
+```
+
+### Including external libraries
+
+When bringing in code from other libraries, or elsewhere in the project,
+statements should be sorted alphabetically.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "some_library.h"
+#include "some_otner_library.h"
+```
 
 ### Comments
 
