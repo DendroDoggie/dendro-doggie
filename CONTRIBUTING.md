@@ -5,6 +5,12 @@ ways to contribute and we appreciate all of them.
 
 ## Bug reports
 
+Before creating an issue for an error or a new feature to be added, consult
+the list of existing issues to make sure your issue has not already been solved
+or not already being worked on. Once you have deduced your issue has not
+already been encountered, go ahead and open an issue. Do not forget to apply
+relavent labels.
+
 ## Documentation and Style Guide
 
 ### Specifics on indentation and line width
@@ -123,7 +129,8 @@ condition. The programmer should use their best discretion to make if and
 looping statements as readable as possible.
 
 ```c
-if (long_condition
+if (
+    long_condition
     && another_long_condition
     && third_long_condition
     || compound_condition
@@ -160,7 +167,8 @@ of a for loop's initialization, maintainance, and termination.
 
 ```c
 // multiple conditions
-for (int some_var = 0;
+for (
+    int some_var = 0;
     condition && other_condition;
     some_var += 1
 ) {
@@ -168,7 +176,8 @@ for (int some_var = 0;
 }
 
 // a string of conditions
-for (int some_var = 0;
+for (
+    int some_var = 0;
     really_long_condition
     && another_condition
     && some_other_condition;
@@ -186,6 +195,17 @@ operator.
 ```c
 double res = (4 - long_calculation + another_long_calculation)
     / (some_other_calculation * 100);
+```
+
+Other times it is not reasonable to have calculations and assignment on the
+same line. Depending on what calculations need to happen first, parenthesis
+can be used to improve readability, as well as force order of operation.
+
+```c
+double other_res = (
+    (long_calculation / another_long_calculation)
+    - (some_other_result / some_other_result)
+) * some_very_specific_magic_decimal_number;
 ```
 
 ### Blank lines
