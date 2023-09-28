@@ -33,7 +33,7 @@ int a_function(int a)
 }
 ```
 
-When defining structs or enums, make use of camel case to better
+When defining structs or enums, make use of pascal case to better
 differentiated between variables and functions and structs and enums. The
 `typedef` keyword should also be avoided to add an extra layer of
 differentiation for structs.
