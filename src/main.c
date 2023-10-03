@@ -35,5 +35,20 @@ int main(int argc, char* argv[])
         printf("%s\n", cmd_response);
     }
 
-    FILE* file_h = fopen()
+    FILE* file_h = fopen("./output.txt", "w");
+    for (int i = 0; i < 150; i += 1)
+    {
+        printf("**************\n");
+
+        ret_code = command("D", cmd_response);
+        if (ret_code)
+        {
+            printf("%s\n", cmd_response);
+        }
+    }
+    fclose(file_h);
+
+    ret_code = close_port();
+
+    return 0;
 }
