@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+// write repo in such a way we don't have to give relative path to headers
+#include "../include/device_ops.h"
 // other includes
 
 
