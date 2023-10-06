@@ -97,8 +97,8 @@ int close_device(void)
 int get_adapter_num(char* adapt_num)
 {
     int ret_code = -1;  // assume failure
-    unsigned char cmd[DEFAULT_BUF_SIZE] = ADAPT_NUM_REQ;
-    unsigned char response[DEFAULT_BUF_SIZE];
+    char cmd[DEFAULT_BUF_SIZE] = ADAPT_NUM_REQ;
+    char response[DEFAULT_BUF_SIZE];
 
     // TODO: might need to open wires for communication
 
@@ -112,7 +112,7 @@ int get_adapter_num(char* adapt_num)
 }
 
 
-int command(const unsigned char* cmd, unsigned char* response)
+int command(const char* cmd, char* response)
 {
     int ret_code = -1;  // assume failure
     

@@ -51,7 +51,7 @@ int get_adapter_num(char* adapt_num);
  * @response place in memory to store dendrometer's response
  * @return status code of operation
  */
-int command(const unsigned char* cmd, unsigned char* response);
+int command(const char* cmd, char* response);
 
 
 #endif /* DEVICE_OPS_H */
