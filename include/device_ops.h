@@ -23,19 +23,19 @@
 
 
 /*
- * Open link to dendrometer over USB interface
- * @baudrate sets the number of bits per second which can be sent and
- *            recieved from the dendrometer
- * @return status code of operation
- */
-int open_device(int baudrate);
-
-
-/*
  * Closes link to dendrometer
  * @return status code of operation
  */
 int close_device(void);
+
+
+/*
+ * Sends command to dendrometer
+ * @cmd command to send
+ * @response place in memory to store dendrometer's response
+ * @return status code of operation
+ */
+int command(char* cmd, char* response);
 
 
 /*
@@ -47,12 +47,12 @@ int get_adapter_num(char* adapt_num);
 
 
 /*
- * Sends command to dendrometer
- * @cmd command to send
- * @response place in memory to store dendrometer's response
+ * Open link to dendrometer over USB interface
+ * @baudrate sets the number of bits per second which can be sent and
+ *            recieved from the dendrometer
  * @return status code of operation
  */
-int command(char* cmd, char* response);
+int open_device(int baudrate);
 
 
 #endif /* DEVICE_OPS_H */

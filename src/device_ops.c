@@ -15,6 +15,75 @@
 struct ftdi_context* ftdi_ctx;
 
 
+int close_device(void)
+{
+    signal(SIGINT, SIG_DFL);
+    ftdi_free(ftdi_ctx);
+    
+    return ftdi_usb_close(ftdi_ctx);
+}
+
+
+int command(char* cmd, char* response)  // TODO: double pointer?
+{
+    // TODO:
+    // 1) some place to put translated command
+    // 2) send chip command
+    // 3) read from device the response
+    int ret_code = -1;  // assume failure
+
+    int bytes = 0;
+    int bytes_left = sizeof(cmd) * DEFAULT_BUF_SIZE;
+    unsigned char chip_cmd[DEFAULT_BAUD_RATE];
+    unsigned char u_response[DEFAULT_BUF_SIZE];
+
+    // writing command to device - wrapper is necessary?
+    // TODO: use while loop
+    if ((bytes = translate(cmd, chip_cmd)) < strlen(cmd))
+    {
+        perror("Error translating command to chip code");
+        return bytes;
+    }
+
+    // another while loop?
+    bytes = ftdi_write_data(ftdi_ctx, chip_cmd, DEFAULT_BUF_SIZE);
+
+
+    // read response from device
+    if (
+        (bytes = ftdi_read_data(
+            ftdi_ctx, u_response, DEFAULT_BUF_SIZE
+        )) < strlen(cmd)
+    ) {
+        perror("Error receiving command resopnse from device");
+        return bytes;
+    }
+
+    return ret_code;
+}
+
+
+// TODO: make use of command()
+int get_adapter_num(char* adapt_num)
+{
+    int ret_code = -1;  // assume failure
+    char cmd[DEFAULT_BUF_SIZE] = ADAPT_NUM_REQ;
+    char response[DEFAULT_BUF_SIZE];
+
+    // TODO: might need to open wires for communication
+
+    if ((ret_code = command(cmd, response)) < 0)
+    {
+        perror("Error completing adapter number request");
+        return ret_code;
+    }
+
+    printf("Response: %s\n", response);
+
+    return ret_code;
+}
+
+
 // TODO: review flow of this function so returning does not cause memory leaks,
 // but is also useful to the user
 int open_device(int baudrate)
@@ -71,8 +140,11 @@ int open_device(int baudrate)
 
     // TODO: get a full grasp of what these properties mean
     // try setting line properties
-    if ((ret_code = ftdi_set_line_property(ftdi_ctx, BITS_8, STOP_BIT_2, NONE)) < 0)
-    {
+    if (
+        (ret_code = ftdi_set_line_property(
+            ftdi_ctx, BITS_8, STOP_BIT_2, NONE
+        )) < 0
+    ) {
         ftdi_free(ftdi_ctx);
         ftdi_list_free(&devlist);
         perror("Error setting line properties for FTDI device");
@@ -80,75 +152,6 @@ int open_device(int baudrate)
     }
 
     // assume connection and setup was a success
-    return ret_code;
-}
-
-
-int close_device(void)
-{
-    signal(SIGINT, SIG_DFL);
-    ftdi_free(ftdi_ctx);
-    
-    return ftdi_usb_close(ftdi_ctx);
-}
-
-
-// TODO: make use of command()
-int get_adapter_num(char* adapt_num)
-{
-    int ret_code = -1;  // assume failure
-    char cmd[DEFAULT_BUF_SIZE] = ADAPT_NUM_REQ;
-    char response[DEFAULT_BUF_SIZE];
-
-    // TODO: might need to open wires for communication
-
-    if ((ret_code = command(cmd, response)) < 0)
-    {
-        perror("Error completing adapter number request");
-        return ret_code;
-    }
-
-    printf("Response: %s\n", response);
-
-    return ret_code;
-}
-
-
-int command(char* cmd, char* response)  // TODO: double pointer?
-{
-    // TODO:
-    // 1) some place to put translated command
-    // 2) send chip command
-    // 3) read from device the response
-    int ret_code = -1;  // assume failure
-
-    int bytes = 0;
-    int bytes_left = sizeof(cmd) * DEFAULT_BUF_SIZE;
-    unsigned char chip_cmd[DEFAULT_BAUD_RATE];
-    unsigned char u_response[DEFAULT_BUF_SIZE];
-
-    // writing command to device - wrapper is necessary?
-    // TODO: use while loop
-    if ((bytes = translate(cmd, chip_cmd)) < strlen(cmd))
-    {
-        perror("Error translating command to chip code");
-        return bytes;
-    }
-
-    // another while loop?
-    bytes = ftdi_write_data(ftdi_ctx, chip_cmd, DEFAULT_BUF_SIZE);
-
-
-    // read response from device
-    if (
-        (bytes = ftdi_read_data(
-            ftdi_ctx, u_response, DEFAULT_BUF_SIZE
-        )) < strlen(cmd)
-    ) {
-        perror("Error receiving command resopnse from device");
-        return bytes;
-    }
-
     return ret_code;
 }
 
