@@ -2,6 +2,9 @@
  * DendroDoggie backend driver
  *
  * Translate and extended by DendroDawgz from October 1st, 2023 to Present
+ *
+ * Resouces:
+ * 1) https://www.intra2net.com/en/developer/libftdi/documentation/
  */
 
 #include <stdio.h>
@@ -17,7 +20,7 @@ int main(int argc, char* argv[])
     char cmd_response[0xffff];  // 65535
 
     printf("Opening FTDI device...\n");
-    ret_code = open_device(DEFAULT_BAUD_RATE);  // set to 500000
+    ret_code = open_device(DEFAULT_BAUD_RATE);
     // check and report device openning op
     if (ret_code < 0)
     {
@@ -50,7 +53,7 @@ int main(int argc, char* argv[])
     }
     fclose(file_h);
 
-    ret_code = close_port();
+    ret_code = close_device();
 
     return 0;
 }

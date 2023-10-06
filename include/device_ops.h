@@ -7,11 +7,18 @@
 #ifndef DEVICE_OPS_H
 #define DEVICE_OPS_H
 
+#include <signal.h>
+#include <stdlib.h>
+#include <libftdi1/ftdi.h>
+
+
+#define ADAPTER_LENGTH 21
+#define DEFAULT_BAUD_RATE 500000
 
 enum DeviceOpCodes
 {
-    OPEN_OK = 0,
-    OPEN_FAIL = 1,
+    FT_OPEN_OK = 0,
+    FT_OPEN_FAIL = 1,
     WRITE_FAIL = 2,
     READ_FAIL = 3,
     // power off codes
