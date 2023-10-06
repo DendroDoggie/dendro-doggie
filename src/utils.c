@@ -2,11 +2,31 @@
 #define UTILS_C
 
 
+#include "../include/utils.h"
+
+
 int translate(char* cmd, unsigned char* translated)
 {
-    int ret_code = -1;  // assume failure
+    int num = 0;
+    int t_idx = 0;
 
-    return ret_code;
+    char* tok = strtok(cmd, ";");
+    while (tok != NULL)
+    {
+        if (tok[0] == '$')
+        {
+            sscanf(tok + 1, "%x", &num);
+        }
+        else
+        {
+            sscanf(tok, "%d", &num);
+        }
+        tok = strtok(NULL, ";");
+        translated[t_idx += 1] = num;
+    }
+
+    // return number of bytes translated
+    return t_idx;
 }
 
 

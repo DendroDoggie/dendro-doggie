@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <libftdi1/ftdi.h>
+#include "./utils.h"
 
 
 #define DEFAULT_BUF_SIZE 32
@@ -51,7 +52,7 @@ int get_adapter_num(char* adapt_num);
  * @response place in memory to store dendrometer's response
  * @return status code of operation
  */
-int command(const char* cmd, char* response);
+int command(char* cmd, char* response);
 
 
 #endif /* DEVICE_OPS_H */

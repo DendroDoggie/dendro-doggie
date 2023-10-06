@@ -2,6 +2,10 @@
 #define UTILS_H
 
 
+#include <stdio.h>
+#include <string.h>
+
+
 /*
  * Translates pseudo human-readable command to an FTDI chip command
  * @cmd command which needs to be sent to the device

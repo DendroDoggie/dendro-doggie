@@ -108,14 +108,47 @@ int get_adapter_num(char* adapt_num)
         return ret_code;
     }
 
+    printf("Response: %s\n", response);
+
     return ret_code;
 }
 
 
-int command(const char* cmd, char* response)
+int command(char* cmd, char* response)  // TODO: double pointer?
 {
+    // TODO:
+    // 1) some place to put translated command
+    // 2) send chip command
+    // 3) read from device the response
     int ret_code = -1;  // assume failure
-    
+
+    int bytes = 0;
+    int bytes_left = sizeof(cmd) * DEFAULT_BUF_SIZE;
+    unsigned char chip_cmd[DEFAULT_BAUD_RATE];
+    unsigned char u_response[DEFAULT_BUF_SIZE];
+
+    // writing command to device - wrapper is necessary?
+    // TODO: use while loop
+    if ((bytes = translate(cmd, chip_cmd)) < strlen(cmd))
+    {
+        perror("Error translating command to chip code");
+        return bytes;
+    }
+
+    // another while loop?
+    bytes = ftdi_write_data(ftdi_ctx, chip_cmd, DEFAULT_BUF_SIZE);
+
+
+    // read response from device
+    if (
+        (bytes = ftdi_read_data(
+            ftdi_ctx, u_response, DEFAULT_BUF_SIZE
+        )) < strlen(cmd)
+    ) {
+        perror("Error receiving command resopnse from device");
+        return bytes;
+    }
+
     return ret_code;
 }
 
