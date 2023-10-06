@@ -14,6 +14,8 @@
 struct ftdi_context* ftdi_ctx;
 
 
+// TODO: review flow of this function so returning does not cause memory leaks,
+// but is also useful to the user
 int open_device(int baudrate)
 {
     int ret_code = -1;  // assume failure
@@ -32,40 +34,52 @@ int open_device(int baudrate)
     if ((ret_code = ftdi_usb_find_all(ftdi_ctx, &devlist, 0, 0)) > 0)
     {
         // try to open one of the devices
-        printf("Found %d USB devices!\n", ret_code);
+        printf("Found %d FTDI devices...\n", ret_code);
         while (
             (ret_code = ftdi_usb_open_dev(ftdi_ctx, devlist->dev)) < 0
         ) {
             devlist = devlist->next;  // memory leak?
         }
     }
+
+    // check for unsuccessful connection
+    if (ret_code < 0)
+    {
+        ftdi_free(ftdi_ctx);
+        ftdi_list_free(&devlist);
+        perror("Error connecting to an FTDI device");
+        return ret_code;
+    }
     
     // try setting the interface
     if ((ret_code = ftdi_set_interface(ftdi_ctx, INTERFACE_ANY)) < 0)
     {
+        ftdi_free(ftdi_ctx);
+        ftdi_list_free(&devlist);
         perror("Error setting FTDI interface");
+        return ret_code;
     }
 
     // try setting the baudrate
     if ((ret_code = ftdi_set_baudrate(ftdi_ctx, baudrate)) < 0)
     {
+        ftdi_free(ftdi_ctx);
+        ftdi_list_free(&devlist);
         perror("Error setting baudrate for FTDI device");
+        return ret_code;
     }
 
     // TODO: get a full grasp of what these properties mean
     // try setting line properties
     if ((ret_code = ftdi_set_line_property(ftdi_ctx, BITS_8, STOP_BIT_2, NONE)) < 0)
     {
-        perror("Error setting line properties for FTDI device");
-    }
-
-    // check process was unsuccessful
-    if (ret_code < 0)
-    {
         ftdi_free(ftdi_ctx);
         ftdi_list_free(&devlist);
+        perror("Error setting line properties for FTDI device");
+        return ret_code;
     }
-    
+
+    // assume connection and setup was a success
     return ret_code;
 }
 

@@ -24,7 +24,6 @@ int main(int argc, char* argv[])
     // check and report device openning op
     if (ret_code < 0)
     {
-        perror("Error opening device");
         exit(EXIT_FAILURE);
     }
 
