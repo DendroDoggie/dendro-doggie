@@ -16,7 +16,7 @@
 
 int main(int argc, char* argv[])
 {
-    int ret_code = -1; // assume device open failure
+    int ret_code = FT_OPEN_FAIL;  // assume device open failure
     char cmd_response[0xffff];  // 65535
 
     printf("Opening FTDI device...\n");
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     // check and report device openning op
     if (ret_code < 0)
     {
-        printf("Error opening device");
+        perror("Error opening device");
         exit(EXIT_FAILURE);
     }
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
     // set pointer to flash -> better desc
     ret_code = command("S=$000000", cmd_response);
-    if (ret_code)
+    if (ret_code > FT_OPEN_OK)
     {
         printf("%s\n", cmd_response);
     }
@@ -43,12 +43,12 @@ int main(int argc, char* argv[])
     FILE* file_h = fopen("./output.txt", "w");
     for (int i = 0; i < 150; i += 1)
     {
-        printf("**************\n");
+        fprintf(file_h, "**************\n");
 
         ret_code = command("D", cmd_response);
         if (ret_code)
         {
-            printf("%s\n", cmd_response);
+            fprintf(file_h, "%s\n", cmd_response);
         }
     }
     fclose(file_h);

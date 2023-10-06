@@ -8,6 +8,7 @@
 #define DEVICE_OPS_H
 
 #include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <libftdi1/ftdi.h>
 
@@ -26,11 +27,11 @@ enum DeviceOpCodes
 
 /*
  * Open link to dendrometer over USB interface
- * @baud_rate sets the number of bits per second which can be sent and
+ * @baudrate sets the number of bits per second which can be sent and
  *            recieved from the dendrometer
  * @return status code of operation
  */
-int open_device(int baud_rate);
+int open_device(int baudrate);
 
 /*
  * Closes link to dendrometer
