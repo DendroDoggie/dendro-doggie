@@ -29,11 +29,13 @@
  */
 int open_device(int baudrate);
 
+
 /*
  * Closes link to dendrometer
  * @return status code of operation
  */
 int close_device(void);
+
 
 /*
  * Gets device's serial number - tentative
@@ -42,13 +44,14 @@ int close_device(void);
  */
 int get_adapter_num(char* adapt_num);
 
+
 /*
  * Sends command to dendrometer
  * @cmd command to send
  * @response place in memory to store dendrometer's response
  * @return status code of operation
  */
-int command(const char* cmd, char* response);
+int command(const unsigned char* cmd, unsigned char* response);
 
 
 #endif /* DEVICE_OPS_H */

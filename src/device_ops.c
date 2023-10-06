@@ -83,6 +83,7 @@ int open_device(int baudrate)
     return ret_code;
 }
 
+
 int close_device(void)
 {
     signal(SIGINT, SIG_DFL);
@@ -91,21 +92,27 @@ int close_device(void)
     return ftdi_usb_close(ftdi_ctx);
 }
 
+
 // TODO: make use of command()
 int get_adapter_num(char* adapt_num)
 {
     int ret_code = -1;  // assume failure
     unsigned char cmd[DEFAULT_BUF_SIZE] = ADAPT_NUM_REQ;
+    unsigned char response[DEFAULT_BUF_SIZE];
 
-    // TODO: be aware about the possiblity of not all bytes getting through
-    ret_code = ftdi_write_data(ftdi_ctx, cmd, DEFAULT_BUF_SIZE);
+    // TODO: might need to open wires for communication
 
-    sscanf(NOT_DEV_RESPONSE, "%s", adapt_num);
+    if ((ret_code = command(cmd, response)) < 0)
+    {
+        perror("Error completing adapter number request");
+        return ret_code;
+    }
 
     return ret_code;
 }
 
-int command(const char* cmd, char* response)
+
+int command(const unsigned char* cmd, unsigned char* response)
 {
     int ret_code = -1;  // assume failure
     
