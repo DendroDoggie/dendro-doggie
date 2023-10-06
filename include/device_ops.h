@@ -49,8 +49,8 @@ int get_adapter_num(char* adapt_num);
 /*
  * Open link to dendrometer over USB interface
  * @baudrate sets the number of bits per second which can be sent and
- *            recieved from the dendrometer
- * @return status code of operation
+ *           recieved from the dendrometer
+ * @return status of operation
  */
 int open_device(int baudrate);
 

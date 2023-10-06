@@ -5,6 +5,18 @@
 #include "../include/utils.h"
 
 
+int rec_response(unsigned char* rec, const int size)
+{
+    return -1;
+}
+
+
+int send_cmd(const unsigned char* chip_cmd, const int size)
+{
+    return -1;
+}
+
+
 int translate(char* cmd, unsigned char* translated)
 {
     int num = 0;
