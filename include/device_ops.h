@@ -13,17 +13,13 @@
 #include <libftdi1/ftdi.h>
 
 
-#define ADAPTER_LENGTH 21
+#define DEFAULT_BUF_SIZE 32
 #define DEFAULT_BAUD_RATE 500000
 
-enum DeviceOpCodes
-{
-    FT_OPEN_OK = 0,
-    FT_OPEN_FAIL = 1,
-    WRITE_FAIL = 2,
-    READ_FAIL = 3,
-    // power off codes
-};
+// device commands
+#define NOT_DEV_RESPONSE "-666"
+#define ADAPT_NUM_REQ "1;$F0"
+
 
 /*
  * Open link to dendrometer over USB interface

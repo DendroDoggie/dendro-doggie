@@ -16,7 +16,7 @@
 
 int main(int argc, char* argv[])
 {
-    int ret_code = FT_OPEN_FAIL;  // assume device open failure
+    int ret_code = -1;  // assume device open failure
     char cmd_response[0xffff];  // 65535
 
     printf("Opening FTDI device...\n");
@@ -28,13 +28,13 @@ int main(int argc, char* argv[])
     }
 
     // get adapter number
-    char adapter[ADAPTER_LENGTH];  // set to 21
+    char adapter[DEFAULT_BUF_SIZE];
     ret_code = get_adapter_num(adapter);
-    printf("res = %d, adapter = %s\n", ret_code, adapter);
+    printf("Result = %d, Adapter = %s\n", ret_code, adapter);
 
     // set pointer to flash -> better desc
     ret_code = command("S=$000000", cmd_response);
-    if (ret_code > FT_OPEN_OK)
+    if (ret_code > 0)
     {
         printf("%s\n", cmd_response);
     }

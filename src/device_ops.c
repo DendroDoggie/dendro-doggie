@@ -7,6 +7,7 @@
 #ifndef DEVICE_OPS_C
 #define DEVICE_OPS_C
 
+
 #include "../include/device_ops.h"
 
 
@@ -27,6 +28,14 @@ int open_device(int baudrate)
     {
         perror("Error creating FTDI context");
         return ret_code;  // early bail since it is easy
+    }
+
+    // try setting the interface
+    if ((ret_code = ftdi_set_interface(ftdi_ctx, INTERFACE_ANY)) < 0)
+    {
+        ftdi_free(ftdi_ctx);
+        perror("Error setting FTDI interface");
+        return ret_code;
     }
 
     // check list of FTDI USB devices connected to the system
@@ -51,15 +60,6 @@ int open_device(int baudrate)
         return ret_code;
     }
     
-    // try setting the interface
-    if ((ret_code = ftdi_set_interface(ftdi_ctx, INTERFACE_ANY)) < 0)
-    {
-        ftdi_free(ftdi_ctx);
-        ftdi_list_free(&devlist);
-        perror("Error setting FTDI interface");
-        return ret_code;
-    }
-
     // try setting the baudrate
     if ((ret_code = ftdi_set_baudrate(ftdi_ctx, baudrate)) < 0)
     {
@@ -86,20 +86,30 @@ int open_device(int baudrate)
 int close_device(void)
 {
     signal(SIGINT, SIG_DFL);
-    ftdi_usb_close(ftdi_ctx);
     ftdi_free(ftdi_ctx);
     
-    return FT_OPEN_OK;
+    return ftdi_usb_close(ftdi_ctx);
 }
 
+// TODO: make use of command()
 int get_adapter_num(char* adapt_num)
 {
-    return FT_OPEN_OK;
+    int ret_code = -1;  // assume failure
+    unsigned char cmd[DEFAULT_BUF_SIZE] = ADAPT_NUM_REQ;
+
+    // TODO: be aware about the possiblity of not all bytes getting through
+    ret_code = ftdi_write_data(ftdi_ctx, cmd, DEFAULT_BUF_SIZE);
+
+    sscanf(NOT_DEV_RESPONSE, "%s", adapt_num);
+
+    return ret_code;
 }
 
 int command(const char* cmd, char* response)
 {
-    return FT_OPEN_OK;
+    int ret_code = -1;  // assume failure
+    
+    return ret_code;
 }
 
 
