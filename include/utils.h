@@ -12,7 +12,7 @@
  * @size length of the response buffer
  * @return status of operation
  */
-int rec_response(unsigned char* rec, const int size);
+int rec(unsigned char* rec, const int size);
 
 
 /*
@@ -21,7 +21,7 @@ int rec_response(unsigned char* rec, const int size);
  * @size length of the command
  * @return status of operation
  */
-int send_cmd(const unsigned char* chip_cmd, const int size);
+int send(const unsigned char* chip_cmd, const int size);
 
 
 /*

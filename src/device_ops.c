@@ -31,32 +31,22 @@ int command(char* cmd, char* response)  // TODO: double pointer?
     // 2) send chip command
     // 3) read from device the response
     int ret_code = -1;  // assume failure
-
-    int bytes = 0;
-    int bytes_left = sizeof(cmd) * DEFAULT_BUF_SIZE;
     unsigned char chip_cmd[DEFAULT_BAUD_RATE];
     unsigned char u_response[DEFAULT_BUF_SIZE];
 
-    // writing command to device - wrapper is necessary?
-    // TODO: use while loop
-    if ((bytes = translate(cmd, chip_cmd)) < strlen(cmd))
+    if ((ret_code = translate(cmd, chip_cmd)) < 0)
     {
-        perror("Error translating command to chip code");
-        return bytes;
+        perror("Error translating to chip command");
     }
-
-    // another while loop?
-    bytes = ftdi_write_data(ftdi_ctx, chip_cmd, DEFAULT_BUF_SIZE);
-
-
-    // read response from device
-    if (
-        (bytes = ftdi_read_data(
-            ftdi_ctx, u_response, DEFAULT_BUF_SIZE
-        )) < strlen(cmd)
-    ) {
-        perror("Error receiving command resopnse from device");
-        return bytes;
+    printf("Chip command: %s", chip_cmd);
+    
+    if ((ret_code = send(chip_cmd, DEFAULT_BUF_SIZE)) < 0)
+    {
+        perror("Error sending chip command to FTDI device");
+    }
+    else if ((ret_code = rec(u_response, DEFAULT_BUF_SIZE)) < 0)  // this works, yeah?
+    {
+        perror("Error receiving response from FTDI device");
     }
 
     return ret_code;
