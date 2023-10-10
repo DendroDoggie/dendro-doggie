@@ -31,22 +31,27 @@ int command(char* cmd, char* response)  // TODO: double pointer?
     // 2) send chip command
     // 3) read from device the response
     int ret_code = -1;  // assume failure
-    unsigned char chip_cmd[DEFAULT_BAUD_RATE];
+    unsigned char chip_cmd[DEFAULT_BUF_SIZE] = "0x10";
     unsigned char u_response[DEFAULT_BUF_SIZE];
 
-    if ((ret_code = translate(cmd, chip_cmd)) < 0)
-    {
-        perror("Error translating to chip command");
-    }
-    printf("Chip command: %s", chip_cmd);
+    // translate human readable command to chip command?
     
-    if ((ret_code = send(chip_cmd, DEFAULT_BUF_SIZE)) < 0)
+    // if ((ret_code = send(ftdi_ctx, chip_cmd, DEFAULT_BUF_SIZE)) < 0)
+    // {
+    //     perror("Error sending chip command to FTDI device");
+    // }
+    // else if ((ret_code = rec(ftdi_ctx, u_response, DEFAULT_BUF_SIZE)) < 0)  // this works, yeah?
+    // {
+    //     perror("Error receiving response from FTDI device");
+    // }
+
+    if ((ret_code = ftdi_write_data(ftdi_ctx, chip_cmd, DEFAULT_BUF_SIZE)) < 0)
     {
-        perror("Error sending chip command to FTDI device");
+        perror("Error writing data to chip");
     }
-    else if ((ret_code = rec(u_response, DEFAULT_BUF_SIZE)) < 0)  // this works, yeah?
+    else if ((ret_code = ftdi_read_data(ftdi_ctx, u_response, DEFAULT_BUF_SIZE)) < 0)
     {
-        perror("Error receiving response from FTDI device");
+        perror("Error reading response from chip");
     }
 
     return ret_code;
@@ -67,7 +72,6 @@ int get_adapter_num(char* adapt_num)
         perror("Error completing adapter number request");
         return ret_code;
     }
-
     printf("Response: %s\n", response);
 
     return ret_code;

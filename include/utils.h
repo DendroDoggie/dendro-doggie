@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <libftdi1/ftdi.h>
 
 
 /*
@@ -12,7 +13,7 @@
  * @size length of the response buffer
  * @return status of operation
  */
-int rec(unsigned char* rec, const int size);
+int rec(struct ftdi_context* ftdi_ctx, unsigned char* rec, const int size);
 
 
 /*
@@ -21,7 +22,11 @@ int rec(unsigned char* rec, const int size);
  * @size length of the command
  * @return status of operation
  */
-int send(const unsigned char* chip_cmd, const int size);
+int send(
+    struct ftdi_context* ftdi_ctx,
+    const unsigned char* chip_cmd,
+    const int size
+ );
 
 
 /*
